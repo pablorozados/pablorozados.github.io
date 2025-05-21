@@ -70,7 +70,7 @@
     };
 
     const print = (text) => {
-      terminal.innerHTML += text + '\n';
+      terminal.innerHTML += text + '\n\n';
       terminal.scrollTop = terminal.scrollHeight;
     };
 
@@ -123,34 +123,31 @@
     };
 
     const handleCommand = (cmd) => {
-      const [base, ...args] = cmd.trim().split(/\s+/);
+      const trimmedCmd = cmd.trim();
+      const [base, ...args] = trimmedCmd.split(/\s+/);
       const command = base.toLowerCase();
       const arg = args.join(' ');
 
-      switch(command) {
-        case 'help':
-          print('Comandos disponíveis:\ndir\ncd [diretório]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
-          break;
-        case 'dir':
-          listFiles();
-          break;
-        case 'cd':
-          if (arg === '..') {
-            subDir = '';
-          } else if (repos[toKey(arg)]) {
-            subDir = arg;
-          } else {
-            print('Diretório não encontrado.');
-          }
-          break;
-        case 'info':
-          showInfo(arg);
-          break;
-        case 'run':
-          runFile(arg);
-          break;
-        default:
-          print('Comando não reconhecido. Digite "help" para ajuda.');
+      if (command === 'help') {
+        print('Comandos disponíveis:\ndir\ncd [diretório]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
+      } else if (command === 'dir') {
+        listFiles();
+      } else if (command === 'cd') {
+        if (arg === '..') {
+          subDir = '';
+        } else if (repos[toKey(arg)]) {
+          subDir = Object.keys(repos).find(r => r.toLowerCase() === arg.toLowerCase()) || arg;
+        } else {
+          print('Diretório não encontrado.');
+        }
+      } else if (command === 'info') {
+        showInfo(arg);
+      } else if (command === 'run') {
+        runFile(arg);
+      } else if (trimmedCmd.toLowerCase().endsWith('.exe')) {
+        runFile(trimmedCmd);
+      } else {
+        print('Comando não reconhecido. Digite "help" para ajuda.');
       }
       showPrompt();
     };
