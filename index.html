@@ -174,13 +174,102 @@
       isLoading = false;
     };
 
+    const showWindowsDialog = async (title, content) => {
+      isLoading = true;
+      document.getElementById('input-line').style.display = 'none';
+      
+      // Limpar terminal temporariamente
+      const oldTerminalContent = terminal.innerHTML;
+      terminal.innerHTML = '';
+      terminal.style.display = 'flex';
+      terminal.style.justifyContent = 'center';
+      terminal.style.alignItems = 'center';
+      
+      // Criar janela estilo Windows 1.0
+      const windowEl = document.createElement('div');
+      windowEl.style.width = '80%';
+      windowEl.style.maxWidth = '600px';
+      windowEl.style.border = '2px solid #ffffff';
+      windowEl.style.backgroundColor = '#0000aa';
+      windowEl.style.color = '#ffffff';
+      windowEl.style.boxShadow = '8px 8px 0px #000000';
+      terminal.appendChild(windowEl);
+      
+      // Barra de título
+      const titleBar = document.createElement('div');
+      titleBar.style.backgroundColor = '#aaaaaa';
+      titleBar.style.color = '#000000';
+      titleBar.style.padding = '3px 5px';
+      titleBar.style.fontWeight = 'bold';
+      titleBar.style.display = 'flex';
+      titleBar.style.justifyContent = 'space-between';
+      titleBar.style.alignItems = 'center';
+      titleBar.innerHTML = `<span>${title}</span><span style="cursor:pointer">[X]</span>`;
+      windowEl.appendChild(titleBar);
+      
+      // Conteúdo
+      const contentEl = document.createElement('div');
+      contentEl.style.padding = '15px';
+      contentEl.style.whiteSpace = 'pre-wrap';
+      contentEl.style.lineHeight = '1.5';
+      contentEl.innerText = content;
+      windowEl.appendChild(contentEl);
+      
+      // Botão OK
+      const buttonBar = document.createElement('div');
+      buttonBar.style.padding = '10px';
+      buttonBar.style.textAlign = 'center';
+      windowEl.appendChild(buttonBar);
+      
+      const okButton = document.createElement('button');
+      okButton.innerText = 'OK';
+      okButton.style.backgroundColor = '#aaaaaa';
+      okButton.style.color = '#000000';
+      okButton.style.border = '2px outset #cccccc';
+      okButton.style.padding = '3px 20px';
+      okButton.style.cursor = 'pointer';
+      okButton.style.fontFamily = 'Courier New, monospace';
+      okButton.style.fontWeight = 'bold';
+      buttonBar.appendChild(okButton);
+      
+      // Efeito de digitação para o conteúdo
+      contentEl.innerText = '';
+      const contentText = content;
+      for (let char of contentText) {
+        contentEl.innerText += char;
+        playSound();
+        await new Promise(resolve => setTimeout(resolve, 30));
+      }
+      
+      // Aguardar clique no botão ou no X
+      return new Promise(resolve => {
+        okButton.onclick = () => {
+          terminal.innerHTML = oldTerminalContent;
+          terminal.style.display = '';
+          terminal.style.justifyContent = '';
+          terminal.style.alignItems = '';
+          document.getElementById('input-line').style.display = '';
+          isLoading = false;
+          resolve();
+        };
+        
+        titleBar.querySelector('span:last-child').onclick = okButton.onclick;
+      });
+    };
+
     const runFile = async (arg) => {
       const file = arg.toLowerCase();
       const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || (val.files && val.files.find(f => f.toLowerCase() === file)));
       
       if (repoMatch) {
         if (repoMatch[0] === 'autor' && file === 'sobre_mim.txt') {
-          print('ola! sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilao de carteirinha.\naqui estao meus projetos pessoais que brinco no tempo livre.\nobrigado pela visita.');
+          // Mostrar texto usando a janela Windows 1.0
+          await showWindowsDialog(
+            'SOBRE_MIM.TXT - NOTEPAD', 
+            'ola! sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilao de carteirinha.\n\naqui estao meus projetos pessoais que brinco no tempo livre.\n\nobrigado pela visita.'
+          );
+          blankLine();
+          showPrompt();
         } else if (file.endsWith('.exe')) {
           // Extrair o nome do app para mostrar no carregador
           const appName = file.replace('.exe', '').toUpperCase();
