@@ -36,6 +36,9 @@
     .error-line {
       color: #FF3333;
     }
+    .loading-line {
+      color: #00FFFF;
+    }
   </style>
 </head>
 <body>
@@ -53,6 +56,7 @@
     let subDir = '';
     let input = '';
     let hasInteracted = false;
+    let isLoading = false;
 
     const repos = {
       arte: {
@@ -81,9 +85,9 @@
       }
     };
 
-    const print = async (text, typing = false, speed = 15, isError = false) => {
+    const print = async (text, typing = false, speed = 15, isError = false, isLoading = false) => {
       const span = document.createElement('div');
-      span.className = isError ? 'error-line' : 'command-line';
+      span.className = isError ? 'error-line' : (isLoading ? 'loading-line' : 'command-line');
       terminal.appendChild(span);
 
       if (!typing) {
@@ -126,13 +130,65 @@
       terminal.scrollTop = terminal.scrollHeight;
     };
 
-    const runFile = (arg) => {
+    const loadingAnimation = async (appName) => {
+      isLoading = true;
+      
+      // Esconder o prompt de entrada durante o carregamento
+      document.getElementById('input-line').style.display = 'none';
+      
+      // Mensagem inicial de carregamento
+      await print(`Inicializando ${appName}...`, true, 20, false, true);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Verificação de sistema
+      await print("Verificando integridade do sistema...", true, 20, false, true);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      await print("OK", true, 20, false, true);
+      
+      // Carregando módulos
+      await print("Carregando modulos principais...", true, 20, false, true);
+      
+      // Barra de progresso
+      const loadingBar = document.createElement('div');
+      loadingBar.className = 'loading-line';
+      terminal.appendChild(loadingBar);
+      
+      const totalSteps = 20;
+      for (let i = 0; i <= totalSteps; i++) {
+        let bar = '[';
+        for (let j = 0; j < totalSteps; j++) {
+          if (j < i) bar += '■';
+          else bar += ' ';
+        }
+        bar += `] ${Math.floor((i/totalSteps) * 100)}%`;
+        loadingBar.innerText = bar;
+        terminal.scrollTop = terminal.scrollHeight;
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      
+      await print("Carregamento completo!", true, 20, false, true);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await print("Executando aplicacao...", true, 20, false, true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      isLoading = false;
+    };
+
+    const runFile = async (arg) => {
       const file = arg.toLowerCase();
       const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || (val.files && val.files.find(f => f.toLowerCase() === file)));
+      
       if (repoMatch) {
         if (repoMatch[0] === 'autor' && file === 'sobre_mim.txt') {
           print('ola! sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilao de carteirinha.\naqui estao meus projetos pessoais que brinco no tempo livre.\nobrigado pela visita.');
         } else if (file.endsWith('.exe')) {
+          // Extrair o nome do app para mostrar no carregador
+          const appName = file.replace('.exe', '').toUpperCase();
+          
+          // Mostrar animação de carregamento
+          await loadingAnimation(appName);
+          
+          // Redirecionar após o carregamento
           window.location.href = repoMatch[1].url;
         } else {
           print('arquivo nao pode ser executado.', false, 15, true);
@@ -187,7 +243,9 @@
       showPrompt();
     };
 
-    const handleCommand = (cmd) => {
+    const handleCommand = async (cmd) => {
+      if (isLoading) return; // Ignorar comandos durante o carregamento
+      
       const trimmedCmd = cmd.trim();
       const [base, ...args] = trimmedCmd.split(/\s+/);
       const command = base.toLowerCase();
@@ -226,17 +284,22 @@
           print('projeto nao encontrado.', false, 15, true);
         }
       } else if (command === 'run') {
-        runFile(arg);
+        await runFile(arg);
       } else if (trimmedCmd.toLowerCase().endsWith('.exe') || trimmedCmd.toLowerCase() === 'sobre_mim.txt') {
-        runFile(trimmedCmd);
+        await runFile(trimmedCmd);
       } else {
         print('comando nao reconhecido. digite "help" para ajuda.', false, 15, true);
       }
-      blankLine();
-      showPrompt();
+      
+      if (!isLoading) {
+        blankLine();
+        showPrompt();
+      }
     };
 
     window.addEventListener('keydown', (e) => {
+      if (isLoading) return; // Ignorar teclas durante o carregamento
+      
       if (e.key.length === 1) {
         input += e.key;
         inputLine.innerText = input;
