@@ -112,7 +112,7 @@
 
     const runFile = (arg) => {
       const file = arg.toLowerCase();
-      const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe');
+      const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || file === val.files.find(f => f.toLowerCase() === key + '.exe'));
       if (repoMatch) {
         window.location.href = repoMatch[1].url;
       } else if (subDir.toLowerCase() === 'autor' && file === 'sobre_mim.txt') {
@@ -140,6 +140,8 @@
         } else {
           print('Diretório não encontrado.');
         }
+      } else if (command === 'cd..') {
+        subDir = '';
       } else if (command === 'info') {
         showInfo(arg);
       } else if (command === 'run') {
@@ -149,11 +151,27 @@
       } else {
         print('Comando não reconhecido. Digite "help" para ajuda.');
       }
+      print(''); // Linha em branco após comando
       showPrompt();
     };
 
-    const bootSequence = () => {
-      print('Phoenix BIOS Version 4.0 Release 6.0\nCopyright 1985-1993 Phoenix Technologies Ltd.\nCPU = Intel Pentium III 500MHz\n640K System RAM Passed\n3072K Extended RAM Passed\nMouse Initialized\nHard Drive: C:\\ Initialized\nBIOS Shadowed\nStarting MS-DOS...\n');
+    const bootSequence = async () => {
+      const lines = [
+        'Phoenix BIOS Version 4.0 Release 6.0',
+        'Copyright 1985-1993 Phoenix Technologies Ltd.',
+        'CPU = Intel Pentium III 500MHz',
+        '640K System RAM Passed',
+        '3072K Extended RAM Passed',
+        'Mouse Initialized',
+        'Hard Drive: C:\\ Initialized',
+        'BIOS Shadowed',
+        'Starting MS-DOS...'
+      ];
+      for (const line of lines) {
+        print(line);
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      print('');
       showPrompt();
     };
 
