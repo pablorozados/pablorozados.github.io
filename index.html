@@ -135,9 +135,13 @@
       const file = arg.toLowerCase();
       const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || (val.files && val.files.find(f => f.toLowerCase() === file)));
       if (repoMatch) {
-        window.location.href = repoMatch[1].url;
-      } else if (subDir.toLowerCase() === 'autor' && file === 'sobre_mim.txt') {
-        print('ola! sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilao de carteirinha.\naqui estao meus projetos pessoais que brinco no tempo livre.\nobrigado pela visita.');
+        if (repoMatch[0] === 'autor' && file === 'sobre_mim.txt') {
+          print('ola! sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilao de carteirinha.\naqui estao meus projetos pessoais que brinco no tempo livre.\nobrigado pela visita.');
+        } else if (file.endsWith('.exe')) {
+          window.location.href = repoMatch[1].url;
+        } else {
+          print('arquivo nao pode ser executado.');
+        }
       } else {
         print('arquivo nao pode ser executado.');
       }
@@ -156,7 +160,7 @@
       } else if (command === 'cd') {
         if (arg === '..') {
           subDir = '';
-        } else if (repos[toKey(arg)]) {
+        } else if (arg && repos[toKey(arg)] && Array.isArray(repos[toKey(arg)].files)) {
           subDir = Object.keys(repos).find(r => r.toLowerCase() === arg.toLowerCase()) || arg;
         } else {
           print('diretorio nao encontrado.');
@@ -167,7 +171,7 @@
         showInfo(arg);
       } else if (command === 'run') {
         runFile(arg);
-      } else if (trimmedCmd.toLowerCase().endsWith('.exe')) {
+      } else if (trimmedCmd.toLowerCase().endsWith('.exe') || trimmedCmd.toLowerCase() === 'sobre_mim.txt') {
         runFile(trimmedCmd);
       } else {
         print('comando nao reconhecido. digite "help" para ajuda.');
@@ -195,8 +199,8 @@
       await new Promise(resolve => setTimeout(resolve, 300));
       await print('cpu = intel pentium iii 500mhz', true);
       await new Promise(resolve => setTimeout(resolve, 300));
-      await updateLine('640k system ram', 640);
-      await updateLine('3072k extended ram', 3072);
+      await updateLine('640K system ram', 640);
+      await updateLine('3072K extended ram', 3072);
       await print('mouse initialized', true);
       await new Promise(resolve => setTimeout(resolve, 300));
       await print('hard drive: c:\\ initialized', true);
