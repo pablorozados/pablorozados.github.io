@@ -126,30 +126,6 @@
       terminal.scrollTop = terminal.scrollHeight;
     };
 
-    const listFiles = () => {
-      if (!subDir) {
-        print('.')
-        print('..')
-        Object.keys(repos).forEach(repo => print(repo));
-      } else {
-        const repoKey = toKey(subDir);
-        if (repos[repoKey]) {
-          repos[repoKey].files.forEach(f => print(f));
-        } else {
-          print('diretorio nao encontrado.', false, 15, true);
-        }
-      }
-    };
-
-    const showInfo = (arg) => {
-      const repoKey = toKey(arg);
-      if (repos[repoKey]) {
-        print(repos[repoKey].description);
-      } else {
-        print('projeto nao encontrado.', false, 15, true);
-      }
-    };
-
     const runFile = (arg) => {
       const file = arg.toLowerCase();
       const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || (val.files && val.files.find(f => f.toLowerCase() === file)));
@@ -166,40 +142,26 @@
       }
     };
 
-    const handleCommand = (cmd) => {
-      const trimmedCmd = cmd.trim();
-      const [base, ...args] = trimmedCmd.split(/\s+/);
-      const command = base.toLowerCase();
-      const arg = args.join(' ');
-
-      if (command === 'help') {
-        print('comandos disponiveis:\ndir\ncd [diretorio]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
-      } else if (command === 'dir') {
-        listFiles();
-      } else if (command === 'cd') {
-        if (arg === '..') {
-          subDir = '';
-        } else if (arg && repos[toKey(arg)] && Array.isArray(repos[toKey(arg)].files)) {
-          subDir = Object.keys(repos).find(r => r.toLowerCase() === arg.toLowerCase()) || arg;
-        } else {
-          print('diretorio nao encontrado.', false, 15, true);
-        }
-      } else if (command === 'cd..') {
-        subDir = '';
-      } else if (command === 'info') {
-        showInfo(arg);
-      } else if (command === 'run') {
-        runFile(arg);
-      } else if (trimmedCmd.toLowerCase().endsWith('.exe') || trimmedCmd.toLowerCase() === 'sobre_mim.txt') {
-        runFile(trimmedCmd);
-      } else {
-        print('comando nao reconhecido. digite "help" para ajuda.', false, 15, true);
-      }
-      blankLine();
-      showPrompt();
-    };
-
     const bootSequence = async () => {
+      const logo = [
+        '   ____      _     _      ____             __         _    __',
+        '  |  __|    | |   | |    |  __|           / _|       | |  | |',
+        '  | |__  ___| |__ | |__  | |___  ___  ___| |_ ___  __| |__| | ___',
+        '  |  __|/ _ \ '_ \| '_ \ |  __|/ _ \/ __|  _/ _ \/ _` / __| |/ _ \',
+        '  | |__|  __/ |_) | | | || |__| (_) \__ \ ||  __/ (_| \__ \ |  __/',
+        '  |_____\___|_.__/|_| |_||_____|\___/|___/_|\___|\__,_|___/_|\___|',
+      ];
+      for (let line of logo) {
+        await print(line, true, 2);
+      }
+      await blankLine();
+      await print('pablo bios version 4.0 release 6.0', true);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      await print('copyright 1985-1993 pablo soft', true);
+      await new Promise(resolve => setTimeout(resolve, 300));
+      await print('cpu = intel pentium iii 500mhz', true);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
       const ramLine = document.createElement('div');
       terminal.appendChild(ramLine);
       const updateLine = async (label, endValue) => {
@@ -212,12 +174,6 @@
         await new Promise(r => setTimeout(r, 200));
       };
 
-      await print('phoenix bios version 4.0 release 6.0', true);
-      await new Promise(resolve => setTimeout(resolve, 300));
-      await print('copyright 1985-1993 phoenix technologies ltd.', true);
-      await new Promise(resolve => setTimeout(resolve, 300));
-      await print('cpu = intel pentium iii 500mhz', true);
-      await new Promise(resolve => setTimeout(resolve, 300));
       await updateLine('640K system ram', 640);
       await updateLine('3072K extended ram', 3072);
       await print('mouse initialized', true);
@@ -227,6 +183,57 @@
       await print('bios shadowed', true);
       await new Promise(resolve => setTimeout(resolve, 300));
       await print('starting ms-dos...', true);
+      await blankLine();
+      runFile('sobre_mim.txt');
+      await blankLine();
+      showPrompt();
+    };
+
+    const handleCommand = (cmd) => {
+      const trimmedCmd = cmd.trim();
+      const [base, ...args] = trimmedCmd.split(/\s+/);
+      const command = base.toLowerCase();
+      const arg = args.join(' ');
+
+      if (command === 'help') {
+        print('comandos disponiveis:\ndir\ncd [diretorio]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
+      } else if (command === 'dir') {
+        if (!subDir) {
+          print('.')
+          print('..')
+          Object.keys(repos).forEach(repo => print(repo));
+        } else {
+          const repoKey = toKey(subDir);
+          if (repos[repoKey]) {
+            repos[repoKey].files.forEach(f => print(f));
+          } else {
+            print('diretorio nao encontrado.', false, 15, true);
+          }
+        }
+      } else if (command === 'cd') {
+        if (arg === '..') {
+          subDir = '';
+        } else if (arg && repos[toKey(arg)] && Array.isArray(repos[toKey(arg)].files)) {
+          subDir = Object.keys(repos).find(r => r.toLowerCase() === arg.toLowerCase()) || arg;
+        } else {
+          print('diretorio nao encontrado.', false, 15, true);
+        }
+      } else if (command === 'cd..') {
+        subDir = '';
+      } else if (command === 'info') {
+        const repoKey = toKey(arg);
+        if (repos[repoKey]) {
+          print(repos[repoKey].description);
+        } else {
+          print('projeto nao encontrado.', false, 15, true);
+        }
+      } else if (command === 'run') {
+        runFile(arg);
+      } else if (trimmedCmd.toLowerCase().endsWith('.exe') || trimmedCmd.toLowerCase() === 'sobre_mim.txt') {
+        runFile(trimmedCmd);
+      } else {
+        print('comando nao reconhecido. digite "help" para ajuda.', false, 15, true);
+      }
       blankLine();
       showPrompt();
     };
