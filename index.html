@@ -46,26 +46,26 @@
     const repos = {
       arte: {
         url: 'https://pablorozados.github.io/arte/',
-        description: 'Projeto pessoal que transforma texto em arte abstrata',
+        description: 'projeto pessoal que transforma texto em arte abstrata',
         files: ['command.sys', 'install.bak', 'arte.exe', 'regfull.ews', 'macross.dll']
       },
       aditahistoriadovideogame: {
         url: 'https://pablorozados.github.io/aditahistoriadovideogame/',
-        description: 'Site onde hospedo a linha do tempo do meu podcast sobre a história do videogame',
+        description: 'site onde hospedo a linha do tempo do meu podcast sobre a historia do videogame',
         files: ['boot.bin', 'video.cfg', 'aditahistoriadovideogame.exe', 'pod.sys', 'load.drv']
       },
       kms: {
         url: 'https://pablorozados.github.io/kms/',
-        description: 'Calculadora que converte a quilometragem do seu carro em voltas na Terra',
+        description: 'calculadora que converte a quilometragem do seu carro em voltas na terra',
         files: ['carros.bat', 'earth.map', 'kms.exe', 'stats.dat', 'config.ini']
       },
       reliquiasdoxis: {
         url: 'https://pablorozados.github.io/reliquiasdoxis/',
-        description: 'Meu site pessoal de resenhas de xis',
+        description: 'meu site pessoal de resenhas de xis',
         files: ['xisdata.sys', 'cheddar.rom', 'reliquiasdoxis.exe', 'taste.bak', 'review.dll']
       },
       autor: {
-        description: 'Sobre mim',
+        description: 'sobre mim',
         files: ['sobre_mim.txt']
       }
     };
@@ -89,6 +89,7 @@
 
     const showPrompt = () => {
       promptSpan.innerText = currentDir + (subDir ? subDir + '\\>' : '>');
+      terminal.scrollTop = terminal.scrollHeight;
     };
 
     const listFiles = () => {
@@ -103,7 +104,7 @@
         if (repos[repoKey]) {
           repos[repoKey].files.forEach(f => print(f));
         } else {
-          print('Diretório não encontrado.');
+          print('diretorio nao encontrado.');
         }
       }
     };
@@ -113,19 +114,19 @@
       if (repos[repoKey]) {
         print(repos[repoKey].description);
       } else {
-        print('Projeto não encontrado.');
+        print('projeto nao encontrado.');
       }
     };
 
     const runFile = (arg) => {
       const file = arg.toLowerCase();
-      const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || val.files.some(f => f.toLowerCase() === file));
+      const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || (val.files && val.files.find(f => f.toLowerCase() === file)));
       if (repoMatch) {
         window.location.href = repoMatch[1].url;
       } else if (subDir.toLowerCase() === 'autor' && file === 'sobre_mim.txt') {
-        print('Olá! Sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilão de carteirinha.\nAqui estão meus projetos pessoais que brinco no tempo livre.\nObrigado pela visita.');
+        print('ola! sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilao de carteirinha.\naqui estao meus projetos pessoais que brinco no tempo livre.\nobrigado pela visita.');
       } else {
-        print('Arquivo não pode ser executado.');
+        print('arquivo nao pode ser executado.');
       }
     };
 
@@ -136,7 +137,7 @@
       const arg = args.join(' ');
 
       if (command === 'help') {
-        print('Comandos disponíveis:\ndir\ncd [diretório]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
+        print('comandos disponiveis:\ndir\ncd [diretorio]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
       } else if (command === 'dir') {
         listFiles();
       } else if (command === 'cd') {
@@ -145,7 +146,7 @@
         } else if (repos[toKey(arg)]) {
           subDir = Object.keys(repos).find(r => r.toLowerCase() === arg.toLowerCase()) || arg;
         } else {
-          print('Diretório não encontrado.');
+          print('diretorio nao encontrado.');
         }
       } else if (command === 'cd..') {
         subDir = '';
@@ -156,7 +157,7 @@
       } else if (trimmedCmd.toLowerCase().endsWith('.exe')) {
         runFile(trimmedCmd);
       } else {
-        print('Comando não reconhecido. Digite "help" para ajuda.');
+        print('comando nao reconhecido. digite "help" para ajuda.');
       }
       blankLine();
       showPrompt();
@@ -165,28 +166,29 @@
     const bootSequence = async () => {
       const ramCount = async (label, endValue) => {
         for (let i = 0; i <= endValue; i += 64) {
-          print(`${label} ${i}K`);
-          await new Promise(r => setTimeout(r, 30));
-          terminal.innerHTML = terminal.innerHTML.split('\n').slice(0, -1).join('\n') + '\n';
+          terminal.innerHTML += `${label} ${i}K` + '\r';
+          terminal.scrollTop = terminal.scrollHeight;
+          await new Promise(r => setTimeout(r, 20));
+          terminal.innerHTML = terminal.innerHTML.replace(/.*\r/, '');
         }
         print(`${label} ${endValue}K Passed`);
       };
 
-      print('Phoenix BIOS Version 4.0 Release 6.0');
+      print('phoenix bios version 4.0 release 6.0');
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('Copyright 1985-1993 Phoenix Technologies Ltd.');
+      print('copyright 1985-1993 phoenix technologies ltd.');
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('CPU = Intel Pentium III 500MHz');
+      print('cpu = intel pentium iii 500mhz');
       await new Promise(resolve => setTimeout(resolve, 300));
-      await ramCount('640K System RAM', 640);
-      await ramCount('3072K Extended RAM', 3072);
-      print('Mouse Initialized');
+      await ramCount('640k system ram', 640);
+      await ramCount('3072k extended ram', 3072);
+      print('mouse initialized');
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('Hard Drive: C:\\ Initialized');
+      print('hard drive: c:\\ initialized');
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('BIOS Shadowed');
+      print('bios shadowed');
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('Starting MS-DOS...');
+      print('starting ms-dos...');
       blankLine();
       showPrompt();
     };
