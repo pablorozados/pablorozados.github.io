@@ -14,6 +14,7 @@
     #terminal {
       white-space: pre-wrap;
       min-height: 80vh;
+      overflow-y: auto;
     }
     #input-line {
       display: inline;
@@ -51,7 +52,7 @@
       aditahistoriadovideogame: {
         url: 'https://pablorozados.github.io/aditahistoriadovideogame/',
         description: 'Site onde hospedo a linha do tempo do meu podcast sobre a história do videogame',
-        files: ['boot.bin', 'video.cfg', 'ADitaHistoriaDoVideogame.exe', 'pod.sys', 'load.drv']
+        files: ['boot.bin', 'video.cfg', 'aditahistoriadovideogame.exe', 'pod.sys', 'load.drv']
       },
       kms: {
         url: 'https://pablorozados.github.io/kms/',
@@ -61,7 +62,7 @@
       reliquiasdoxis: {
         url: 'https://pablorozados.github.io/reliquiasdoxis/',
         description: 'Meu site pessoal de resenhas de xis',
-        files: ['xisdata.sys', 'cheddar.rom', 'ReliquiasdoXis.exe', 'taste.bak', 'review.dll']
+        files: ['xisdata.sys', 'cheddar.rom', 'reliquiasdoxis.exe', 'taste.bak', 'review.dll']
       },
       autor: {
         description: 'Sobre mim',
@@ -76,6 +77,7 @@
 
     const blankLine = () => {
       terminal.innerHTML += '\n';
+      terminal.scrollTop = terminal.scrollHeight;
     };
 
     const playSound = () => {
@@ -94,7 +96,7 @@
         print('.');
         print('..');
         Object.keys(repos).forEach(repo => {
-          print(repo.charAt(0).toUpperCase() + repo.slice(1));
+          print(repo);
         });
       } else {
         const repoKey = toKey(subDir);
@@ -117,7 +119,7 @@
 
     const runFile = (arg) => {
       const file = arg.toLowerCase();
-      const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || file === val.files.find(f => f.toLowerCase() === key + '.exe'));
+      const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || val.files.some(f => f.toLowerCase() === file));
       if (repoMatch) {
         window.location.href = repoMatch[1].url;
       } else if (subDir.toLowerCase() === 'autor' && file === 'sobre_mim.txt') {
@@ -161,21 +163,30 @@
     };
 
     const bootSequence = async () => {
-      const lines = [
-        'Phoenix BIOS Version 4.0 Release 6.0',
-        'Copyright 1985-1993 Phoenix Technologies Ltd.',
-        'CPU = Intel Pentium III 500MHz',
-        '640K System RAM Passed',
-        '3072K Extended RAM Passed',
-        'Mouse Initialized',
-        'Hard Drive: C:\\ Initialized',
-        'BIOS Shadowed',
-        'Starting MS-DOS...'
-      ];
-      for (const line of lines) {
-        print(line);
-        await new Promise(resolve => setTimeout(resolve, 300));
-      }
+      const ramCount = async (label, endValue) => {
+        for (let i = 0; i <= endValue; i += 64) {
+          print(`${label} ${i}K`);
+          await new Promise(r => setTimeout(r, 30));
+          terminal.innerHTML = terminal.innerHTML.split('\n').slice(0, -1).join('\n') + '\n';
+        }
+        print(`${label} ${endValue}K Passed`);
+      };
+
+      print('Phoenix BIOS Version 4.0 Release 6.0');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      print('Copyright 1985-1993 Phoenix Technologies Ltd.');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      print('CPU = Intel Pentium III 500MHz');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      await ramCount('640K System RAM', 640);
+      await ramCount('3072K Extended RAM', 3072);
+      print('Mouse Initialized');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      print('Hard Drive: C:\\ Initialized');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      print('BIOS Shadowed');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      print('Starting MS-DOS...');
       blankLine();
       showPrompt();
     };
@@ -194,6 +205,7 @@
         input = '';
         inputLine.innerText = '';
       }
+      terminal.scrollTop = terminal.scrollHeight;
     });
 
     bootSequence();
