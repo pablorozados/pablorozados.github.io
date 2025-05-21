@@ -70,8 +70,12 @@
     };
 
     const print = (text) => {
-      terminal.innerHTML += text + '\n\n';
+      terminal.innerHTML += text + '\n';
       terminal.scrollTop = terminal.scrollHeight;
+    };
+
+    const blankLine = () => {
+      terminal.innerHTML += '\n';
     };
 
     const playSound = () => {
@@ -87,7 +91,8 @@
 
     const listFiles = () => {
       if (!subDir) {
-        print('.\n..');
+        print('.');
+        print('..');
         Object.keys(repos).forEach(repo => {
           print(repo.charAt(0).toUpperCase() + repo.slice(1));
         });
@@ -151,7 +156,7 @@
       } else {
         print('Comando não reconhecido. Digite "help" para ajuda.');
       }
-      print(''); // Linha em branco após comando
+      blankLine();
       showPrompt();
     };
 
@@ -171,7 +176,7 @@
         print(line);
         await new Promise(resolve => setTimeout(resolve, 300));
       }
-      print('');
+      blankLine();
       showPrompt();
     };
 
