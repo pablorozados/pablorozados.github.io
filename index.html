@@ -1,6 +1,157 @@
-<h1>Meus Sites no GitHub Pages</h1>
-<ul>
-  <li><a href="/site1/">Site 1</a></li>
-  <li><a href="/meu-jogo/">Meu Jogo</a></li>
-  <li><a href="/blog/">Blog</a></li>
-</ul>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal - pablorozados.github.io</title>
+  <style>
+    body {
+      background-color: #001800;
+      color: #33ff33;
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 1rem;
+      font-size: 16px;
+    }
+    #terminal {
+      max-width: 800px;
+      margin: 0 auto;
+      white-space: pre-wrap;
+    }
+    .input-line {
+      display: flex;
+    }
+    .prompt {
+      margin-right: 0.5rem;
+    }
+    input {
+      background: transparent;
+      border: none;
+      color: #33ff33;
+      font: inherit;
+      outline: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <script>
+    const terminal = document.getElementById("terminal");
+
+    const fakeBoot = [
+      "Memory Test: 640K OK",
+      "Initializing BIOS... Done",
+      "Detecting Drives... C: D: E: Found",
+      "Loading Pablo OS v1.0...",
+      "Pressione qualquer tecla para iniciar..."
+    ];
+
+    const files = {
+      ".": "<DIR>",
+      "..": "<DIR>",
+      "Arte": "<DIR>",
+      "ADitaHistoriaDoVideogame": "<DIR>",
+      "Kms": "<DIR>",
+      "ReliquiasdoXis": "<DIR>",
+      "Autor": "<DIR>"
+    };
+
+    const infoText = {
+      "Arte": "Projeto pessoal que transforma texto em arte abstrata.",
+      "ADitaHistoriaDoVideogame": "Site onde hospedo a linha do tempo do meu podcast sobre a história do videogame.",
+      "Kms": "Calculadora que converte a quilometragem do seu carro em voltas na Terra.",
+      "ReliquiasdoXis": "Meu site pessoal de resenhas de xis.",
+      "Autor": "Contém um texto pessoal sobre mim."
+    };
+
+    const links = {
+      "Arte": "https://pablorozados.github.io/arte/",
+      "ADitaHistoriaDoVideogame": "https://pablorozados.github.io/aditahistoriadovideogame/",
+      "Kms": "https://pablorozados.github.io/kms/",
+      "ReliquiasdoXis": "https://pablorozados.github.io/reliquiasdoxis/"
+    };
+
+    let currentPath = "C:\\";
+    let activeDir = null;
+
+    const sobreMim = `Olá! Sou jornalista, metido a dev \"no code\", cozinheiro, gamer raiz e comilão de carteirinha.\nAqui estão meus projetos pessoais que brinco no tempo livre.\nObrigado pela visita.`;
+
+    function print(text = "") {
+      terminal.innerHTML += text + "\n";
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function prompt() {
+      const promptEl = document.createElement("div");
+      promptEl.className = "input-line";
+      promptEl.innerHTML = `<span class='prompt'>${currentPath}></span>`;
+
+      const input = document.createElement("input");
+      input.autofocus = true;
+      promptEl.appendChild(input);
+      terminal.appendChild(promptEl);
+
+      input.focus();
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const command = input.value.trim();
+          promptEl.innerHTML += command;
+          processCommand(command);
+        }
+      });
+    }
+
+    function processCommand(cmd) {
+      const args = cmd.split(" ");
+      const base = args[0].toLowerCase();
+
+      if (base === "help") {
+        print("Comandos disponíveis:\n- dir\n- cd [pasta]\n- cd..\n- run [arquivo]\n- info [pasta]\n- help");
+      } else if (base === "dir") {
+        for (let name in files) print(name);
+      } else if (base === "cd") {
+        const target = args[1];
+        if (target === "..") {
+          activeDir = null;
+          currentPath = "C:\\";
+        } else if (files[target]) {
+          activeDir = target;
+          currentPath = `C:\\${target}`;
+        } else {
+          print("Diretório não encontrado.");
+        }
+      } else if (base === "info") {
+        const target = args[1];
+        if (infoText[target]) print(infoText[target]);
+        else print("Nenhuma informação disponível.");
+      } else if (base === "run") {
+        const target = args[1];
+        if (activeDir === "Autor" && target === "sobre_mim.txt") {
+          print(sobreMim);
+        } else if (links[activeDir]) {
+          window.location.href = links[activeDir];
+        } else {
+          print("Arquivo não encontrado ou não executável.");
+        }
+      } else if (cmd === "") {
+        // nada
+      } else {
+        print("Comando não reconhecido. Digite 'help' para ajuda.");
+      }
+
+      prompt();
+    }
+
+    (async function bootSequence() {
+      for (const line of fakeBoot) {
+        print(line);
+        await new Promise((res) => setTimeout(res, 600));
+      }
+      print();
+      prompt();
+    })();
+  </script>
+</body>
+</html>
