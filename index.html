@@ -10,10 +10,14 @@
       font-family: 'Courier New', monospace;
       padding: 10px;
       overflow-x: hidden;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     #terminal {
       white-space: pre-wrap;
-      min-height: 80vh;
+      flex-grow: 1;
       overflow-y: auto;
     }
     #input-line {
@@ -94,11 +98,9 @@
 
     const listFiles = () => {
       if (!subDir) {
-        print('.');
-        print('..');
-        Object.keys(repos).forEach(repo => {
-          print(repo);
-        });
+        print('.')
+        print('..')
+        Object.keys(repos).forEach(repo => print(repo));
       } else {
         const repoKey = toKey(subDir);
         if (repos[repoKey]) {
@@ -164,14 +166,16 @@
     };
 
     const bootSequence = async () => {
-      const ramCount = async (label, endValue) => {
+      const ramLine = document.createElement('div');
+      terminal.appendChild(ramLine);
+      const updateLine = async (label, endValue) => {
         for (let i = 0; i <= endValue; i += 64) {
-          terminal.innerHTML += `${label} ${i}K` + '\r';
+          ramLine.innerText = `${label} ${i}K`;
           terminal.scrollTop = terminal.scrollHeight;
           await new Promise(r => setTimeout(r, 20));
-          terminal.innerHTML = terminal.innerHTML.replace(/.*\r/, '');
         }
-        print(`${label} ${endValue}K Passed`);
+        ramLine.innerText = `${label} ${endValue}K Passed`;
+        await new Promise(r => setTimeout(r, 200));
       };
 
       print('phoenix bios version 4.0 release 6.0');
@@ -180,8 +184,8 @@
       await new Promise(resolve => setTimeout(resolve, 300));
       print('cpu = intel pentium iii 500mhz');
       await new Promise(resolve => setTimeout(resolve, 300));
-      await ramCount('640k system ram', 640);
-      await ramCount('3072k extended ram', 3072);
+      await updateLine('640k system ram', 640);
+      await updateLine('3072k extended ram', 3072);
       print('mouse initialized');
       await new Promise(resolve => setTimeout(resolve, 300));
       print('hard drive: c:\\ initialized');
