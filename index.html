@@ -1,157 +1,182 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terminal - pablorozados.github.io</title>
+  <meta charset="UTF-8">
+  <title>pablorozados.github.io</title>
   <style>
     body {
-      background-color: #001800;
-      color: #33ff33;
+      background-color: black;
+      color: #00FF00;
       font-family: 'Courier New', monospace;
-      margin: 0;
-      padding: 1rem;
-      font-size: 16px;
+      padding: 10px;
+      overflow-x: hidden;
     }
     #terminal {
-      max-width: 800px;
-      margin: 0 auto;
       white-space: pre-wrap;
+      min-height: 80vh;
     }
-    .input-line {
-      display: flex;
+    #input-line {
+      display: inline;
     }
-    .prompt {
-      margin-right: 0.5rem;
+    #blinker {
+      animation: blink 1s step-end infinite;
     }
-    input {
-      background: transparent;
-      border: none;
-      color: #33ff33;
-      font: inherit;
-      outline: none;
-      width: 100%;
+    @keyframes blink {
+      50% { opacity: 0; }
     }
+    audio { display: none; }
   </style>
 </head>
 <body>
+  <audio id="typeSound" src="https://www.soundjay.com/button/sounds/button-16.mp3"></audio>
   <div id="terminal"></div>
+  <div id="input-line"><span id="prompt">C:\></span><span id="input"></span><span id="blinker">█</span></div>
+
   <script>
-    const terminal = document.getElementById("terminal");
+    const terminal = document.getElementById('terminal');
+    const inputLine = document.getElementById('input');
+    const promptSpan = document.getElementById('prompt');
+    const typeSound = document.getElementById('typeSound');
 
-    const fakeBoot = [
-      "Memory Test: 640K OK",
-      "Initializing BIOS... Done",
-      "Detecting Drives... C: D: E: Found",
-      "Loading Pablo OS v1.0...",
-      "Pressione qualquer tecla para iniciar..."
-    ];
+    let currentDir = 'C:\\';
+    let subDir = '';
+    let input = '';
 
-    const files = {
-      ".": "<DIR>",
-      "..": "<DIR>",
-      "Arte": "<DIR>",
-      "ADitaHistoriaDoVideogame": "<DIR>",
-      "Kms": "<DIR>",
-      "ReliquiasdoXis": "<DIR>",
-      "Autor": "<DIR>"
+    const repos = {
+      arte: {
+        url: 'https://pablorozados.github.io/arte/',
+        description: 'Projeto pessoal que transforma texto em arte abstrata',
+        files: ['command.sys', 'install.bak', 'arte.exe', 'regfull.ews', 'macross.dll']
+      },
+      aditahistoriadovideogame: {
+        url: 'https://pablorozados.github.io/aditahistoriadovideogame/',
+        description: 'Site onde hospedo a linha do tempo do meu podcast sobre a história do videogame',
+        files: ['boot.bin', 'video.cfg', 'ADitaHistoriaDoVideogame.exe', 'pod.sys', 'load.drv']
+      },
+      kms: {
+        url: 'https://pablorozados.github.io/kms/',
+        description: 'Calculadora que converte a quilometragem do seu carro em voltas na Terra',
+        files: ['carros.bat', 'earth.map', 'kms.exe', 'stats.dat', 'config.ini']
+      },
+      reliquiasdoxis: {
+        url: 'https://pablorozados.github.io/reliquiasdoxis/',
+        description: 'Meu site pessoal de resenhas de xis',
+        files: ['xisdata.sys', 'cheddar.rom', 'ReliquiasdoXis.exe', 'taste.bak', 'review.dll']
+      },
+      autor: {
+        description: 'Sobre mim',
+        files: ['sobre_mim.txt']
+      }
     };
 
-    const infoText = {
-      "Arte": "Projeto pessoal que transforma texto em arte abstrata.",
-      "ADitaHistoriaDoVideogame": "Site onde hospedo a linha do tempo do meu podcast sobre a história do videogame.",
-      "Kms": "Calculadora que converte a quilometragem do seu carro em voltas na Terra.",
-      "ReliquiasdoXis": "Meu site pessoal de resenhas de xis.",
-      "Autor": "Contém um texto pessoal sobre mim."
+    const print = (text) => {
+      terminal.innerHTML += text + '\n';
+      terminal.scrollTop = terminal.scrollHeight;
     };
 
-    const links = {
-      "Arte": "https://pablorozados.github.io/arte/",
-      "ADitaHistoriaDoVideogame": "https://pablorozados.github.io/aditahistoriadovideogame/",
-      "Kms": "https://pablorozados.github.io/kms/",
-      "ReliquiasdoXis": "https://pablorozados.github.io/reliquiasdoxis/"
+    const playSound = () => {
+      typeSound.currentTime = 0;
+      typeSound.play();
     };
 
-    let currentPath = "C:\\";
-    let activeDir = null;
+    const toKey = (name) => name.toLowerCase();
 
-    const sobreMim = `Olá! Sou jornalista, metido a dev \"no code\", cozinheiro, gamer raiz e comilão de carteirinha.\nAqui estão meus projetos pessoais que brinco no tempo livre.\nObrigado pela visita.`;
+    const showPrompt = () => {
+      promptSpan.innerText = currentDir + (subDir ? subDir + '\\>' : '>');
+    };
 
-    function print(text = "") {
-      terminal.innerHTML += text + "\n";
-      window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    function prompt() {
-      const promptEl = document.createElement("div");
-      promptEl.className = "input-line";
-      promptEl.innerHTML = `<span class='prompt'>${currentPath}></span>`;
-
-      const input = document.createElement("input");
-      input.autofocus = true;
-      promptEl.appendChild(input);
-      terminal.appendChild(promptEl);
-
-      input.focus();
-
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          const command = input.value.trim();
-          promptEl.innerHTML += command;
-          processCommand(command);
-        }
-      });
-    }
-
-    function processCommand(cmd) {
-      const args = cmd.split(" ");
-      const base = args[0].toLowerCase();
-
-      if (base === "help") {
-        print("Comandos disponíveis:\n- dir\n- cd [pasta]\n- cd..\n- run [arquivo]\n- info [pasta]\n- help");
-      } else if (base === "dir") {
-        for (let name in files) print(name);
-      } else if (base === "cd") {
-        const target = args[1];
-        if (target === "..") {
-          activeDir = null;
-          currentPath = "C:\\";
-        } else if (files[target]) {
-          activeDir = target;
-          currentPath = `C:\\${target}`;
-        } else {
-          print("Diretório não encontrado.");
-        }
-      } else if (base === "info") {
-        const target = args[1];
-        if (infoText[target]) print(infoText[target]);
-        else print("Nenhuma informação disponível.");
-      } else if (base === "run") {
-        const target = args[1];
-        if (activeDir === "Autor" && target === "sobre_mim.txt") {
-          print(sobreMim);
-        } else if (links[activeDir]) {
-          window.location.href = links[activeDir];
-        } else {
-          print("Arquivo não encontrado ou não executável.");
-        }
-      } else if (cmd === "") {
-        // nada
+    const listFiles = () => {
+      if (!subDir) {
+        print('.\n..');
+        Object.keys(repos).forEach(repo => {
+          print(repo.charAt(0).toUpperCase() + repo.slice(1));
+        });
       } else {
-        print("Comando não reconhecido. Digite 'help' para ajuda.");
+        const repoKey = toKey(subDir);
+        if (repos[repoKey]) {
+          repos[repoKey].files.forEach(f => print(f));
+        } else {
+          print('Diretório não encontrado.');
+        }
       }
+    };
 
-      prompt();
-    }
-
-    (async function bootSequence() {
-      for (const line of fakeBoot) {
-        print(line);
-        await new Promise((res) => setTimeout(res, 600));
+    const showInfo = (arg) => {
+      const repoKey = toKey(arg);
+      if (repos[repoKey]) {
+        print(repos[repoKey].description);
+      } else {
+        print('Projeto não encontrado.');
       }
-      print();
-      prompt();
-    })();
+    };
+
+    const runFile = (arg) => {
+      const file = arg.toLowerCase();
+      const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe');
+      if (repoMatch) {
+        window.location.href = repoMatch[1].url;
+      } else if (subDir.toLowerCase() === 'autor' && file === 'sobre_mim.txt') {
+        print('Olá! Sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilão de carteirinha.\nAqui estão meus projetos pessoais que brinco no tempo livre.\nObrigado pela visita.');
+      } else {
+        print('Arquivo não pode ser executado.');
+      }
+    };
+
+    const handleCommand = (cmd) => {
+      const [base, ...args] = cmd.trim().split(/\s+/);
+      const command = base.toLowerCase();
+      const arg = args.join(' ');
+
+      switch(command) {
+        case 'help':
+          print('Comandos disponíveis:\ndir\ncd [diretório]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
+          break;
+        case 'dir':
+          listFiles();
+          break;
+        case 'cd':
+          if (arg === '..') {
+            subDir = '';
+          } else if (repos[toKey(arg)]) {
+            subDir = arg;
+          } else {
+            print('Diretório não encontrado.');
+          }
+          break;
+        case 'info':
+          showInfo(arg);
+          break;
+        case 'run':
+          runFile(arg);
+          break;
+        default:
+          print('Comando não reconhecido. Digite "help" para ajuda.');
+      }
+      showPrompt();
+    };
+
+    const bootSequence = () => {
+      print('Phoenix BIOS Version 4.0 Release 6.0\nCopyright 1985-1993 Phoenix Technologies Ltd.\nCPU = Intel Pentium III 500MHz\n640K System RAM Passed\n3072K Extended RAM Passed\nMouse Initialized\nHard Drive: C:\\ Initialized\nBIOS Shadowed\nStarting MS-DOS...\n');
+      showPrompt();
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key.length === 1) {
+        input += e.key;
+        inputLine.innerText = input;
+        playSound();
+      } else if (e.key === 'Backspace') {
+        input = input.slice(0, -1);
+        inputLine.innerText = input;
+      } else if (e.key === 'Enter') {
+        terminal.innerHTML += promptSpan.innerText + input + '\n';
+        handleCommand(input);
+        input = '';
+        inputLine.innerText = '';
+      }
+    });
+
+    bootSequence();
   </script>
 </body>
 </html>
