@@ -39,6 +39,42 @@
     .loading-line {
       color: #00FFFF;
     }
+    .windows-dialog {
+      width: 80%;
+      max-width: 600px;
+      border: 2px solid #ffffff;
+      background-color: #0000aa;
+      color: #ffffff;
+      box-shadow: 8px 8px 0px #000000;
+      margin: 20px auto;
+    }
+    .title-bar {
+      background-color: #aaaaaa;
+      color: #000000;
+      padding: 3px 5px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dialog-content {
+      padding: 15px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .dialog-button-bar {
+      padding: 10px;
+      text-align: center;
+    }
+    .dialog-button {
+      background-color: #aaaaaa;
+      color: #000000;
+      border: 2px outset #cccccc;
+      padding: 3px 20px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -130,6 +166,68 @@
       terminal.scrollTop = terminal.scrollHeight;
     };
 
+    const showWindowsDialog = async (title, content) => {
+      isLoading = true;
+      
+      // Salvar o conteúdo atual do terminal para restaurar depois
+      const oldScrollTop = terminal.scrollTop;
+      
+      // Ocultar a linha de comando durante o diálogo
+      document.getElementById('input-line').style.display = 'none';
+      
+      // Criar a janela de diálogo
+      const dialogDiv = document.createElement('div');
+      dialogDiv.className = 'windows-dialog';
+      
+      // Adicionar barra de título
+      const titleBar = document.createElement('div');
+      titleBar.className = 'title-bar';
+      titleBar.innerHTML = `<span>${title}</span><span style="cursor:pointer">[X]</span>`;
+      dialogDiv.appendChild(titleBar);
+      
+      // Adicionar conteúdo
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'dialog-content';
+      dialogDiv.appendChild(contentDiv);
+      
+      // Adicionar barra de botões
+      const buttonBar = document.createElement('div');
+      buttonBar.className = 'dialog-button-bar';
+      const okButton = document.createElement('button');
+      okButton.className = 'dialog-button';
+      okButton.innerText = 'OK';
+      buttonBar.appendChild(okButton);
+      dialogDiv.appendChild(buttonBar);
+      
+      // Adicionar diálogo ao terminal
+      terminal.appendChild(dialogDiv);
+      terminal.scrollTop = terminal.scrollHeight;
+      
+      // Efeito de digitação para o conteúdo
+      for (let char of content) {
+        contentDiv.textContent += char;
+        playSound();
+        await new Promise(resolve => setTimeout(resolve, 30));
+      }
+      
+      // Função para fechar o diálogo
+      const closeDialog = () => {
+        dialogDiv.remove();
+        document.getElementById('input-line').style.display = '';
+        terminal.scrollTop = terminal.scrollHeight;
+        isLoading = false;
+        blankLine();
+        showPrompt();
+      };
+      
+      // Configurar eventos dos botões
+      okButton.addEventListener('click', closeDialog);
+      titleBar.querySelector('span:last-child').addEventListener('click', closeDialog);
+      
+      // Foco automático no botão OK
+      okButton.focus();
+    };
+    
     const loadingAnimation = async (appName) => {
       isLoading = true;
       
@@ -174,102 +272,17 @@
       isLoading = false;
     };
 
-    const showWindowsDialog = async (title, content) => {
-      isLoading = true;
-      document.getElementById('input-line').style.display = 'none';
-      
-      // Limpar terminal temporariamente
-      const oldTerminalContent = terminal.innerHTML;
-      terminal.innerHTML = '';
-      terminal.style.display = 'flex';
-      terminal.style.justifyContent = 'center';
-      terminal.style.alignItems = 'center';
-      
-      // Criar janela estilo Windows 1.0
-      const windowEl = document.createElement('div');
-      windowEl.style.width = '80%';
-      windowEl.style.maxWidth = '600px';
-      windowEl.style.border = '2px solid #ffffff';
-      windowEl.style.backgroundColor = '#0000aa';
-      windowEl.style.color = '#ffffff';
-      windowEl.style.boxShadow = '8px 8px 0px #000000';
-      terminal.appendChild(windowEl);
-      
-      // Barra de título
-      const titleBar = document.createElement('div');
-      titleBar.style.backgroundColor = '#aaaaaa';
-      titleBar.style.color = '#000000';
-      titleBar.style.padding = '3px 5px';
-      titleBar.style.fontWeight = 'bold';
-      titleBar.style.display = 'flex';
-      titleBar.style.justifyContent = 'space-between';
-      titleBar.style.alignItems = 'center';
-      titleBar.innerHTML = `<span>${title}</span><span style="cursor:pointer">[X]</span>`;
-      windowEl.appendChild(titleBar);
-      
-      // Conteúdo
-      const contentEl = document.createElement('div');
-      contentEl.style.padding = '15px';
-      contentEl.style.whiteSpace = 'pre-wrap';
-      contentEl.style.lineHeight = '1.5';
-      contentEl.innerText = content;
-      windowEl.appendChild(contentEl);
-      
-      // Botão OK
-      const buttonBar = document.createElement('div');
-      buttonBar.style.padding = '10px';
-      buttonBar.style.textAlign = 'center';
-      windowEl.appendChild(buttonBar);
-      
-      const okButton = document.createElement('button');
-      okButton.innerText = 'OK';
-      okButton.style.backgroundColor = '#aaaaaa';
-      okButton.style.color = '#000000';
-      okButton.style.border = '2px outset #cccccc';
-      okButton.style.padding = '3px 20px';
-      okButton.style.cursor = 'pointer';
-      okButton.style.fontFamily = 'Courier New, monospace';
-      okButton.style.fontWeight = 'bold';
-      buttonBar.appendChild(okButton);
-      
-      // Efeito de digitação para o conteúdo
-      contentEl.innerText = '';
-      const contentText = content;
-      for (let char of contentText) {
-        contentEl.innerText += char;
-        playSound();
-        await new Promise(resolve => setTimeout(resolve, 30));
-      }
-      
-      // Aguardar clique no botão ou no X
-      return new Promise(resolve => {
-        okButton.onclick = () => {
-          terminal.innerHTML = oldTerminalContent;
-          terminal.style.display = '';
-          terminal.style.justifyContent = '';
-          terminal.style.alignItems = '';
-          document.getElementById('input-line').style.display = '';
-          isLoading = false;
-          resolve();
-        };
-        
-        titleBar.querySelector('span:last-child').onclick = okButton.onclick;
-      });
-    };
-
     const runFile = async (arg) => {
       const file = arg.toLowerCase();
       const repoMatch = Object.entries(repos).find(([key, val]) => file === key + '.exe' || (val.files && val.files.find(f => f.toLowerCase() === file)));
       
       if (repoMatch) {
         if (repoMatch[0] === 'autor' && file === 'sobre_mim.txt') {
-          // Mostrar texto usando a janela Windows 1.0
+          // Mostrar diálogo estilo Windows
           await showWindowsDialog(
             'SOBRE_MIM.TXT - NOTEPAD', 
             'ola! sou jornalista, metido a dev "no code", cozinheiro, gamer raiz e comilao de carteirinha.\n\naqui estao meus projetos pessoais que brinco no tempo livre.\n\nobrigado pela visita.'
           );
-          blankLine();
-          showPrompt();
         } else if (file.endsWith('.exe')) {
           // Extrair o nome do app para mostrar no carregador
           const appName = file.replace('.exe', '').toUpperCase();
@@ -281,9 +294,13 @@
           window.location.href = repoMatch[1].url;
         } else {
           print('arquivo nao pode ser executado.', false, 15, true);
+          blankLine();
+          showPrompt();
         }
       } else {
         print('arquivo nao pode ser executado.', false, 15, true);
+        blankLine();
+        showPrompt();
       }
     };
 
@@ -342,6 +359,8 @@
 
       if (command === 'help') {
         print('comandos disponiveis:\ndir\ncd [diretorio]\ncd..\ninfo [nome]\nrun [arquivo]\nhelp');
+        blankLine();
+        showPrompt();
       } else if (command === 'dir') {
         if (!subDir) {
           print('.')
@@ -355,6 +374,8 @@
             print('diretorio nao encontrado.', false, 15, true);
           }
         }
+        blankLine();
+        showPrompt();
       } else if (command === 'cd') {
         if (arg === '..') {
           subDir = '';
@@ -363,8 +384,12 @@
         } else {
           print('diretorio nao encontrado.', false, 15, true);
         }
+        blankLine();
+        showPrompt();
       } else if (command === 'cd..') {
         subDir = '';
+        blankLine();
+        showPrompt();
       } else if (command === 'info') {
         const repoKey = toKey(arg);
         if (repos[repoKey]) {
@@ -372,15 +397,14 @@
         } else {
           print('projeto nao encontrado.', false, 15, true);
         }
+        blankLine();
+        showPrompt();
       } else if (command === 'run') {
         await runFile(arg);
       } else if (trimmedCmd.toLowerCase().endsWith('.exe') || trimmedCmd.toLowerCase() === 'sobre_mim.txt') {
         await runFile(trimmedCmd);
       } else {
         print('comando nao reconhecido. digite "help" para ajuda.', false, 15, true);
-      }
-      
-      if (!isLoading) {
         blankLine();
         showPrompt();
       }
@@ -398,9 +422,10 @@
         inputLine.innerText = input;
       } else if (e.key === 'Enter') {
         terminal.innerHTML += `<div class='command-line'>${promptSpan.innerText}${input}</div>`;
-        handleCommand(input);
+        const currentInput = input;
         input = '';
         inputLine.innerText = '';
+        handleCommand(currentInput);
       }
       terminal.scrollTop = terminal.scrollHeight;
     });
