@@ -74,9 +74,20 @@
       }
     };
 
-    const print = (text) => {
-      terminal.innerHTML += text + '\n';
-      terminal.scrollTop = terminal.scrollHeight;
+    const print = async (text, typing = false, speed = 15) => {
+      if (!typing) {
+        terminal.innerHTML += text + '\n';
+        terminal.scrollTop = terminal.scrollHeight;
+        return;
+      }
+
+      for (let char of text) {
+        terminal.innerHTML += char;
+        terminal.scrollTop = terminal.scrollHeight;
+        playSound();
+        await new Promise(resolve => setTimeout(resolve, speed));
+      }
+      terminal.innerHTML += '\n';
     };
 
     const blankLine = () => {
@@ -178,21 +189,21 @@
         await new Promise(r => setTimeout(r, 200));
       };
 
-      print('phoenix bios version 4.0 release 6.0');
+      await print('phoenix bios version 4.0 release 6.0', true);
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('copyright 1985-1993 phoenix technologies ltd.');
+      await print('copyright 1985-1993 phoenix technologies ltd.', true);
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('cpu = intel pentium iii 500mhz');
+      await print('cpu = intel pentium iii 500mhz', true);
       await new Promise(resolve => setTimeout(resolve, 300));
       await updateLine('640k system ram', 640);
       await updateLine('3072k extended ram', 3072);
-      print('mouse initialized');
+      await print('mouse initialized', true);
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('hard drive: c:\\ initialized');
+      await print('hard drive: c:\\ initialized', true);
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('bios shadowed');
+      await print('bios shadowed', true);
       await new Promise(resolve => setTimeout(resolve, 300));
-      print('starting ms-dos...');
+      await print('starting ms-dos...', true);
       blankLine();
       showPrompt();
     };
