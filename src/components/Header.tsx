@@ -25,7 +25,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
     <header className="border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <Link to="/#/" className="font-retro font-bold text-xl text-retro-yellow hover:text-retro-yellow/80 transition-colors">
+          <Link to="/" className="font-retro font-bold text-xl text-retro-yellow hover:text-retro-yellow/80 transition-colors">
             A DITA HISTÓRIA DO VIDEOGAME
           </Link>
         </div>
@@ -58,17 +58,19 @@ const Header = ({ onAdminClick }: HeaderProps) => {
             </DialogContent>
           </Dialog>
 
-          <Link to="/#/timeline" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+          {/* Timeline agora é âncora */}
+          <a href="#timeline" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
             Timeline
-          </Link>
+          </a>
+
           <Link 
-            to="/#/propagandas" 
+            to="/propagandas" 
             className={`font-mono transition-colors ${location.pathname === '/propagandas' ? 'text-retro-yellow' : 'text-gray-300 hover:text-retro-yellow'}`}
           >
             Propagandas
           </Link>
           <Link 
-            to="/#/sobre" 
+            to="/sobre" 
             className={`font-mono transition-colors ${location.pathname === '/sobre' ? 'text-retro-yellow' : 'text-gray-300 hover:text-retro-yellow'}`}
           >
             Sobre
@@ -115,13 +117,15 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                   </DialogContent>
                 </Dialog>
 
-                <Link to="/#/timeline" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+                {/* Timeline agora é âncora */}
+                <a href="#timeline" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
                   Timeline
-                </Link>
-                <Link to="/#/propagandas" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+                </a>
+
+                <Link to="/propagandas" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
                   Propagandas
                 </Link>
-                <Link to="/#/sobre" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+                <Link to="/sobre" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
                   Sobre
                 </Link>
                 <Button onClick={onAdminClick} variant="ghost" className="text-gray-300 hover:text-retro-yellow justify-start p-0 font-mono">
