@@ -20,4 +20,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  routes: [
+    {
+      path: '/admin',
+      component: 'src/admin/index.html',
+    },
+  ],
 }));
