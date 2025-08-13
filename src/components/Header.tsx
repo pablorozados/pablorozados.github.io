@@ -93,7 +93,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
               <div className="p-6 space-y-6">
                 <div className="text-center">
                   <p className="font-mono text-gray-300 mb-4">
-                    Sua contribuição ajuda a manter o podcast no ar e produzir mais conteúdo de qualidade!
+                    Sua contribuição ajuda a manter o podcast no ar e produzir mais conteúdo!
                   </p>
                 </div>
                 
