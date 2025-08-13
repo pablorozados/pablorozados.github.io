@@ -35,7 +35,6 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/sobre" element={<About />} />
             <Route path="/propagandas" element={<Propagandas />} />
-            {/* Se timeline for uma âncora da Index, não precisa de rota separada */}
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="*" element={<NotFound />} />

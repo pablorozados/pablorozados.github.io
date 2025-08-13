@@ -21,6 +21,9 @@ const Header = ({ onAdminClick }: HeaderProps) => {
     ? episodes.reduce((latest, current) => current.year > latest.year ? current : latest)
     : null;
 
+  // Lógica para o link de Timeline
+  const timelineLink = location.pathname === "/" ? "#timeline" : "/#timeline";
+
   return (
     <header className="border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -58,8 +61,8 @@ const Header = ({ onAdminClick }: HeaderProps) => {
             </DialogContent>
           </Dialog>
 
-          {/* Timeline agora é âncora */}
-          <a href="#timeline" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+          {/* Timeline */}
+          <a href={timelineLink} className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
             Timeline
           </a>
 
@@ -117,8 +120,8 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                   </DialogContent>
                 </Dialog>
 
-                {/* Timeline agora é âncora */}
-                <a href="#timeline" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+                {/* Timeline */}
+                <a href={timelineLink} className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
                   Timeline
                 </a>
 
