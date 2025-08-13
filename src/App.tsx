@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { Analytics } from '@vercel/analytics/react';
 
+import Header from "@/components/Header";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Propagandas from "./pages/Propagandas";
@@ -14,25 +15,35 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/sobre" element={<About />} />
-          <Route path="/propagandas" element={<Propagandas />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </HashRouter>
-      <Analytics />
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Função que abre o admin usando HashRouter
+  const handleAdminClick = () => {
+    window.location.href = '/#/admin/login';
+  };
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        {/* Header recebe a função */}
+        <Header onAdminClick={handleAdminClick} />
+
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/sobre" element={<About />} />
+            <Route path="/propagandas" element={<Propagandas />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </HashRouter>
+
+        <Analytics />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
