@@ -9,7 +9,6 @@ import { ArrowLeft, Plus, LogOut, Trash2, Edit, ImageIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdvertisements, Advertisement } from '@/hooks/useAdvertisements';
 import { useToast } from '@/hooks/use-toast';
-import Header from '@/components/Header';
 import ImageViewer from '@/components/ImageViewer';
 import SearchFilter from '@/components/SearchFilter';
 import SEOHead from '@/components/SEOHead';
@@ -146,7 +145,6 @@ const Propagandas = () => {
         keywords="propagandas videogame, anúncios games antigos, publicidade consoles, marketing jogos retrô"
         canonicalUrl="https://aditahistoriadovideogame.lovable.app/propagandas"
       />
-      <Header onAdminClick={handleAdminClick} />
       
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">

@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Play, Calendar, ExternalLink } from 'lucide-react';
 import TimelineSection from '@/components/TimelineSection';
-import Header from '@/components/Header';
+// Removido: import Header from '@/components/Header';
 import LoadingSkeleton from '@/components/LoadingSkeleton';
 import SEOHead from '@/components/SEOHead';
 import { useEpisodes, Episode } from '@/hooks/useEpisodes';
@@ -142,7 +141,7 @@ const Index = () => {
         canonicalUrl="https://aditahistoriadovideogame.lovable.app"
         structuredData={structuredData}
       />
-      <Header onAdminClick={() => window.location.href = '/admin/login'} />
+      {/* Removido: <Header onAdminClick={() => window.location.href = '/admin/login'} /> */}
       
       <main className="container mx-auto px-4 py-8">
         {loading ? (
@@ -186,7 +185,6 @@ const Index = () => {
             </section>
           </>
         )}
-
 
         {/* Search Section */}
         <section className="mb-12">

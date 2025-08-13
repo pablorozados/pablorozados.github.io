@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import Header from '@/components/Header';
 import SEOHead from '@/components/SEOHead';
 // Using user's actual images - force reload with new names
 import spotifyIcon from '@/assets/icons/spotify-new.png';
@@ -50,7 +49,6 @@ const About = () => {
         keywords="podcast videogame, história games, sobre podcast, formato cronológico, pesquisa games"
         canonicalUrl="https://aditahistoriadovideogame.lovable.app/sobre"
       />
-      <Header onAdminClick={() => window.location.href = '/admin/login'} />
       
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="hero-section bg-white/95 backdrop-blur-sm rounded-3xl p-12 mb-8 shadow-2xl text-center relative overflow-hidden">
