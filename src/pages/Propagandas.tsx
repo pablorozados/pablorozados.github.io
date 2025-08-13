@@ -154,7 +154,7 @@ const Propagandas = () => {
             PROPAGANDAS NACIONAIS
           </h1>
           <p className="font-mono text-gray-300 text-lg">
-            Coleção de propagandas de videogames brasileiras
+            Coleção nacional de propagandas de videogames 🇧🇷
           </p>
         </div>
 
