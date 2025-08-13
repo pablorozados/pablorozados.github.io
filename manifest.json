@@ -1,0 +1,26 @@
+{
+  "name": "A Dita História do Videogame",
+  "short_name": "Dita História",
+  "description": "Timeline interativa da história dos videogames",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/lovable-uploads/8861bd33-a7a0-400d-82ac-8bdb7175ab83.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/lovable-uploads/8861bd33-a7a0-400d-82ac-8bdb7175ab83.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["entertainment", "education"],
+  "lang": "pt-BR"
+}
