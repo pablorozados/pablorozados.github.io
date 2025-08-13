@@ -1,3 +1,4 @@
+// App.tsx
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,13 +28,14 @@ const App = () => {
         <Sonner />
 
         <HashRouter>
-          {/* Header fixo */}
+          {/* Header único */}
           <Header onAdminClick={handleAdminClick} />
 
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/sobre" element={<About />} />
             <Route path="/propagandas" element={<Propagandas />} />
+            {/* Se timeline for uma âncora da Index, não precisa de rota separada */}
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="*" element={<NotFound />} />
