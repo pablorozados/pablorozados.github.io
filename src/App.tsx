@@ -16,7 +16,6 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Função que abre o admin usando HashRouter
   const handleAdminClick = () => {
     window.location.href = '/#/admin/login';
   };
@@ -27,9 +26,8 @@ const App = () => {
         <Toaster />
         <Sonner />
 
-        {/* Coloque o HashRouter primeiro */}
         <HashRouter>
-          {/* Header dentro do HashRouter para usar useLocation corretamente */}
+          {/* Header fixo */}
           <Header onAdminClick={handleAdminClick} />
 
           <Routes>
