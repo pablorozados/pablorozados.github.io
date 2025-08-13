@@ -90,6 +90,52 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                   Ajude a manter o podcast
                 </DialogTitle>
               </DialogHeader>
+              <div className="p-6 space-y-6">
+                <div className="text-center">
+                  <p className="font-mono text-gray-300 mb-4">
+                    Sua contribuição ajuda a manter o podcast no ar e produzir mais conteúdo de qualidade!
+                  </p>
+                </div>
+                
+                <div className="text-center space-y-4">
+                  <div className="bg-white p-2 rounded-lg inline-block">
+                    <img 
+                      src="/src/assets/pix.jpg" 
+                      alt="QR Code PIX" 
+                      className="w-48 h-48 mx-auto object-contain"
+                    />
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <p className="font-mono text-sm text-retro-yellow">
+                      Código Copia e Cola:
+                    </p>
+                    <div className="bg-gray-900 p-3 rounded border border-retro-blue">
+                      <p className="font-mono text-xs text-gray-300 break-all">
+                        00020101021126580014br.gov.bcb.pix0136bdde579d-62ba-49aa-9e5f-914c4f739d0c5204000053039865802BR5919PABLO FROTA ROZADOS6012PORTO ALEGRE62070503***63046CE2
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText('00020101021126580014br.gov.bcb.pix0136bdde579d-62ba-49aa-9e5f-914c4f739d0c5204000053039865802BR5919PABLO FROTA ROZADOS6012PORTO ALEGRE62070503***63046CE2');
+                        toast({ title: "Código copiado!", description: "O código PIX foi copiado para sua área de transferência.", });
+                      }}
+                      className="retro-button font-mono text-sm"
+                    >
+                      📋 Copiar Código PIX
+                    </Button>
+                    <p className="font-mono text-xs text-gray-400">
+                      Escaneie o QR Code ou copie o código acima
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <p className="font-mono text-xs text-gray-500">
+                    Muito obrigado pelo apoio! ❤️
+                  </p>
+                </div>
+              </div>
             </DialogContent>
           </Dialog>
 
@@ -138,6 +184,52 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                         Ajude a manter o podcast
                       </DialogTitle>
                     </DialogHeader>
+                    <div className="p-6 space-y-6">
+                      <div className="text-center">
+                        <p className="font-mono text-gray-300 mb-4">
+                          Sua contribuição ajuda a manter o podcast no ar e produzir mais conteúdo de qualidade!
+                        </p>
+                      </div>
+                      
+                      <div className="text-center space-y-4">
+                        <div className="bg-white p-2 rounded-lg inline-block">
+                          <img 
+                            src="/src/assets/pix.jpg" 
+                            alt="QR Code PIX" 
+                            className="w-48 h-48 mx-auto object-contain"
+                          />
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <p className="font-mono text-sm text-retro-yellow">
+                            Código Copia e Cola:
+                          </p>
+                          <div className="bg-gray-900 p-3 rounded border border-retro-blue">
+                            <p className="font-mono text-xs text-gray-300 break-all">
+                              00020101021126580014br.gov.bcb.pix0136bdde579d-62ba-49aa-9e5f-914c4f739d0c5204000053039865802BR5919PABLO FROTA ROZADOS6012PORTO ALEGRE62070503***63046CE2
+                            </p>
+                          </div>
+                          <Button
+                            onClick={() => {
+                              navigator.clipboard.writeText('00020101021126580014br.gov.bcb.pix0136bdde579d-62ba-49aa-9e5f-914c4f739d0c5204000053039865802BR5919PABLO FROTA ROZADOS6012PORTO ALEGRE62070503***63046CE2');
+                              toast({ title: "Código copiado!", description: "O código PIX foi copiado para sua área de transferência.", });
+                            }}
+                            className="retro-button font-mono text-sm"
+                          >
+                            📋 Copiar Código PIX
+                          </Button>
+                          <p className="font-mono text-xs text-gray-400">
+                            Escaneie o QR Code ou copie o código acima
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="text-center">
+                        <p className="font-mono text-xs text-gray-500">
+                          Muito obrigado pelo apoio! ❤️
+                        </p>
+                      </div>
+                    </div>
                   </DialogContent>
                 </Dialog>
 
