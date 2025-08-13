@@ -42,14 +42,22 @@ const Propagandas = () => {
     );
   }, [advertisements, searchTerm]);
 
-  // Função simplificada para controle do admin
-  const handleAdminClick = () => {
-    if (!user) {
-      window.location.href = '/#/admin/login';
-    } else {
-      setShowAdminPanel(!showAdminPanel);
-    }
-  };
+  // Função que será usada pelo Header através do window
+  React.useEffect(() => {
+    // Definir função global que o Header pode usar
+    (window as any).propagandasAdminClick = () => {
+      if (!user) {
+        window.location.href = '/#/admin/login';
+      } else {
+        setShowAdminPanel(!showAdminPanel);
+      }
+    };
+
+    // Cleanup quando sair da página
+    return () => {
+      delete (window as any).propagandasAdminClick;
+    };
+  }, [user, showAdminPanel]);
 
   const resetForm = () => {
     setFormData({
@@ -154,7 +162,7 @@ const Propagandas = () => {
             PROPAGANDAS NACIONAIS
           </h1>
           <p className="font-mono text-gray-300 text-lg">
-            Coleção nacional de propagandas de videogames 🇧🇷
+            Coleção de propagandas de videogames brasileiras
           </p>
         </div>
 

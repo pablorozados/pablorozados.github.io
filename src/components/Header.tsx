@@ -46,18 +46,14 @@ const Header = ({ onAdminClick }: HeaderProps) => {
       return;
     }
 
-    // Caso contrário, usar lógica automática baseada na rota atual
-    if (location.pathname === '/propagandas') {
-      // Se estiver na página de Propagandas e não logado, vai para login
-      // Se estiver logado, fica na própria página (administração inline)
-      if (!user) {
-        window.location.href = '/#/admin/login';
-      }
-      // Se já estiver logado, não faz nada (o admin panel é mostrado inline na página)
-    } else {
-      // Para todas as outras páginas, vai para o admin principal
-      window.location.href = '/#/admin/login';
+    // Para a página de Propagandas, usar função global se existir
+    if (location.pathname === '/propagandas' && (window as any).propagandasAdminClick) {
+      (window as any).propagandasAdminClick();
+      return;
     }
+
+    // Para todas as outras páginas, vai para o admin principal
+    window.location.href = '/#/admin/login';
   };
 
   return (
