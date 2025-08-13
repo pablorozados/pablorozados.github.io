@@ -19,9 +19,9 @@ const Propagandas = () => {
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
-  description: '',
-  system: '',
-  enviada_por: '',
+    description: '',
+    system: '',
+    enviada_por: '',
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,9 +42,10 @@ const Propagandas = () => {
     );
   }, [advertisements, searchTerm]);
 
+  // Função simplificada para controle do admin
   const handleAdminClick = () => {
     if (!user) {
-      window.location.href = '/admin/login';
+      window.location.href = '/#/admin/login';
     } else {
       setShowAdminPanel(!showAdminPanel);
     }
@@ -65,11 +66,11 @@ const Propagandas = () => {
 
   const handleEdit = (ad: Advertisement) => {
     setEditingAd(ad);
-  setFormData({
-    description: ad.description,
-    system: ad.system,
-    enviada_por: ad.enviada_por || '',
-  });
+    setFormData({
+      description: ad.description,
+      system: ad.system,
+      enviada_por: ad.enviada_por || '',
+    });
     setShowAdminPanel(true);
   };
 
@@ -105,12 +106,12 @@ const Propagandas = () => {
         imageUrl = uploadedUrl;
       }
 
-  const adData = {
-    description: formData.description,
-    system: formData.system,
-    enviada_por: formData.enviada_por,
-    image_url: imageUrl!,
-  };
+      const adData = {
+        description: formData.description,
+        system: formData.system,
+        enviada_por: formData.enviada_por,
+        image_url: imageUrl!,
+      };
 
       let error;
       if (editingAd) {
@@ -145,6 +146,7 @@ const Propagandas = () => {
         keywords="propagandas videogame, anúncios games antigos, publicidade consoles, marketing jogos retrô"
         canonicalUrl="https://aditahistoriadovideogame.lovable.app/propagandas"
       />
+      {/* Header agora é passado pelo App.tsx com lógica automática */}
       
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
@@ -155,6 +157,18 @@ const Propagandas = () => {
             Coleção de propagandas de videogames brasileiras
           </p>
         </div>
+
+        {/* Botão adicional para mostrar admin se estiver logado */}
+        {user && (
+          <div className="mb-8 text-center">
+            <Button
+              onClick={() => setShowAdminPanel(!showAdminPanel)}
+              className="retro-button font-mono"
+            >
+              {showAdminPanel ? 'Ocultar Admin' : 'Mostrar Admin'}
+            </Button>
+          </div>
+        )}
 
         {/* Admin Panel */}
         {showAdminPanel && user && (

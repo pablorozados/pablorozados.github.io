@@ -7,9 +7,10 @@ import { Settings, Heart, Menu } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useEpisodes } from '@/hooks/useEpisodes';
+import { useAuth } from '@/hooks/useAuth';
 
 interface HeaderProps {
-  onAdminClick: () => void;
+  onAdminClick?: () => void; // Tornar opcional
 }
 
 const Header = ({ onAdminClick }: HeaderProps) => {
@@ -17,6 +18,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { episodes } = useEpisodes();
+  const { user } = useAuth(); // Importar para verificar se está logado
 
   const latestEpisode = episodes.length > 0
     ? episodes.reduce((latest, current) => current.year > latest.year ? current : latest)
@@ -33,6 +35,28 @@ const Header = ({ onAdminClick }: HeaderProps) => {
     } else {
       const elem = document.getElementById('timeline');
       if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Função inteligente para navegação do admin
+  const handleAdminClick = () => {
+    // Se há uma função customizada (como na página Propagandas), usar ela
+    if (onAdminClick) {
+      onAdminClick();
+      return;
+    }
+
+    // Caso contrário, usar lógica automática baseada na rota atual
+    if (location.pathname === '/propagandas') {
+      // Se estiver na página de Propagandas e não logado, vai para login
+      // Se estiver logado, fica na própria página (administração inline)
+      if (!user) {
+        window.location.href = '/#/admin/login';
+      }
+      // Se já estiver logado, não faz nada (o admin panel é mostrado inline na página)
+    } else {
+      // Para todas as outras páginas, vai para o admin principal
+      window.location.href = '/#/admin/login';
     }
   };
 
@@ -83,7 +107,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
             Sobre
           </Link>
 
-          <Button onClick={onAdminClick} variant="ghost" size="sm" className="text-gray-400 hover:text-retro-yellow">
+          <Button onClick={handleAdminClick} variant="ghost" size="sm" className="text-gray-400 hover:text-retro-yellow">
             <Settings size={16} />
           </Button>
         </nav>
@@ -130,7 +154,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                 <Link to="/sobre" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
                   Sobre
                 </Link>
-                <Button onClick={onAdminClick} variant="ghost" className="text-gray-300 hover:text-retro-yellow justify-start p-0 font-mono">
+                <Button onClick={handleAdminClick} variant="ghost" className="text-gray-300 hover:text-retro-yellow justify-start p-0 font-mono">
                   <Settings size={16} className="mr-2" />
                   Admin
                 </Button>
