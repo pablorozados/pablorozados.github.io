@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; URL=/" />
-    <title>Redirecionando...</title>
-  </head>
-  <body>
-    <p>Redirecionando para o site...</p>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Página não encontrada</title>
+</head>
+<body>
+  <script type="module">
+    // Redireciona qualquer rota para o index.html mantendo a URL
+    fetch("/index.html")
+      .then(response => response.text())
+      .then(html => {
+        document.open();
+        document.write(html);
+        document.close();
+      })
+      .catch(err => console.error("Erro ao carregar a página:", err));
+  </script>
+</body>
 </html>
