@@ -28,7 +28,6 @@ const App = () => {
         <Sonner />
 
         <HashRouter>
-          {/* Header único */}
           <Header onAdminClick={handleAdminClick} />
 
           <Routes>

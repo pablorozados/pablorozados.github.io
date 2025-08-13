@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Settings, Heart, Menu } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useEpisodes } from '@/hooks/useEpisodes';
 
@@ -14,6 +14,7 @@ interface HeaderProps {
 
 const Header = ({ onAdminClick }: HeaderProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { episodes } = useEpisodes();
 
@@ -21,8 +22,19 @@ const Header = ({ onAdminClick }: HeaderProps) => {
     ? episodes.reduce((latest, current) => current.year > latest.year ? current : latest)
     : null;
 
-  // Lógica para o link de Timeline
-  const timelineLink = location.pathname === "/" ? "#timeline" : "/#timeline";
+  const handleTimelineClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/', { replace: false });
+      setTimeout(() => {
+        const elem = document.getElementById('timeline');
+        if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else {
+      const elem = document.getElementById('timeline');
+      if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <header className="border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
@@ -61,21 +73,13 @@ const Header = ({ onAdminClick }: HeaderProps) => {
             </DialogContent>
           </Dialog>
 
-          {/* Timeline */}
-          <a href={timelineLink} className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+          <button onClick={handleTimelineClick} className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
             Timeline
-          </a>
-
-          <Link 
-            to="/propagandas" 
-            className={`font-mono transition-colors ${location.pathname === '/propagandas' ? 'text-retro-yellow' : 'text-gray-300 hover:text-retro-yellow'}`}
-          >
+          </button>
+          <Link to="/propagandas" className={`font-mono transition-colors ${location.pathname === '/propagandas' ? 'text-retro-yellow' : 'text-gray-300 hover:text-retro-yellow'}`}>
             Propagandas
           </Link>
-          <Link 
-            to="/sobre" 
-            className={`font-mono transition-colors ${location.pathname === '/sobre' ? 'text-retro-yellow' : 'text-gray-300 hover:text-retro-yellow'}`}
-          >
+          <Link to="/sobre" className={`font-mono transition-colors ${location.pathname === '/sobre' ? 'text-retro-yellow' : 'text-gray-300 hover:text-retro-yellow'}`}>
             Sobre
           </Link>
 
@@ -96,14 +100,11 @@ const Header = ({ onAdminClick }: HeaderProps) => {
               <SheetHeader>
                 <SheetTitle className="font-retro text-retro-yellow text-left">Menu</SheetTitle>
               </SheetHeader>
-
               <div className="flex flex-col space-y-6 mt-8">
-                <a href={latestEpisode?.listen_url || "https://pod.link/1513923155"} target="_blank" rel="noopener noreferrer"
-                  className="font-mono text-gray-300 hover:text-retro-yellow transition-colors flex items-center gap-2">
+                <a href={latestEpisode?.listen_url || "https://pod.link/1513923155"} target="_blank" rel="noopener noreferrer" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors flex items-center gap-2">
                   🎧 Escute o último episódio
                 </a>
 
-                {/* Apoie */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" className="text-gray-300 hover:text-retro-yellow transition-colors font-mono flex items-center gap-2 justify-start p-0">
@@ -120,11 +121,9 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                   </DialogContent>
                 </Dialog>
 
-                {/* Timeline */}
-                <a href={timelineLink} className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
+                <button onClick={handleTimelineClick} className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
                   Timeline
-                </a>
-
+                </button>
                 <Link to="/propagandas" className="font-mono text-gray-300 hover:text-retro-yellow transition-colors">
                   Propagandas
                 </Link>
