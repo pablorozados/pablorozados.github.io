@@ -26,10 +26,12 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        {/* Header recebe a função */}
-        <Header onAdminClick={handleAdminClick} />
 
+        {/* Coloque o HashRouter primeiro */}
         <HashRouter>
+          {/* Header dentro do HashRouter para usar useLocation corretamente */}
+          <Header onAdminClick={handleAdminClick} />
+
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/sobre" element={<About />} />
