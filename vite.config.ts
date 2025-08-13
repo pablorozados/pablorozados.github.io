@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   base: '/',
   server: {
@@ -24,6 +23,12 @@ export default defineConfig(({ mode }) => ({
     {
       path: '/admin',
       component: 'src/admin/index.html',
+      children: [
+        {
+          path: 'login',
+          component: 'src/admin/login.html',
+        },
+      ],
     },
   ],
 }));
