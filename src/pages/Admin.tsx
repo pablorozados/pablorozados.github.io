@@ -41,7 +41,8 @@ const Admin = () => {
   }
 
   if (!user) {
-    return <Navigate to="/admin/login" replace />;
+    window.location.href = '/#/admin/login';
+    return null;
   }
 
   const resetForm = () => {
