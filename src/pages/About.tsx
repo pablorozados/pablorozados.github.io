@@ -47,7 +47,7 @@ const About = () => {
         title="Sobre - A Dita História do Videogame | Podcast de Games"
         description="Conheça a missão do podcast A Dita História do Videogame. Formato cronológico, pesquisa detalhada e timeline interativa sobre a evolução dos videogames."
         keywords="podcast videogame, história games, sobre podcast, formato cronológico, pesquisa games"
-        canonicalUrl="https://aditahistoriadovideogame.lovable.app/sobre"
+        canonicalUrl="https://pablorozados.github.io/sobre"
       />
       
       <div className="max-w-4xl mx-auto px-4 py-8">

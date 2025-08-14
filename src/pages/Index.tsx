@@ -124,10 +124,10 @@ const Index = () => {
     "@type": "WebSite",
     "name": "A Dita História do Videogame",
     "description": "Uma jornada épica através da história dos videogames. Timeline interativa com episódios sobre a evolução dos games.",
-    "url": "https://aditahistoriadovideogame.lovable.app",
+    "url": "https://pablorozados.github.io",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://aditahistoriadovideogame.lovable.app/?search={search_term_string}",
+      "target": "https://pablorozados.github.io/?search={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
@@ -138,7 +138,7 @@ const Index = () => {
         title="A Dita História do Videogame - Timeline Interativa dos Games"
         description="Explore a história completa dos videogames através de nossa timeline interativa. Episódios sobre consoles, jogos e a evolução da indústria gamer desde 1970."
         keywords="videogame, história, games, podcast, timeline, nintendo, playstation, xbox, atari, consoles, jogos"
-        canonicalUrl="https://aditahistoriadovideogame.lovable.app"
+        canonicalUrl="https://pablorozados.github.io"
         structuredData={structuredData}
       />
       {/* Removido: <Header onAdminClick={() => window.location.href = '/admin/login'} /> */}

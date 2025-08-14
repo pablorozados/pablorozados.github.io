@@ -152,7 +152,7 @@ const Propagandas = () => {
         title="Propagandas Antigas - A Dita História do Videogame"
         description="Coleção nostálgica de propagandas históricas de videogames, consoles e jogos que marcaram época. Explore anúncios clássicos dos games."
         keywords="propagandas videogame, anúncios games antigos, publicidade consoles, marketing jogos retrô"
-        canonicalUrl="https://aditahistoriadovideogame.lovable.app/propagandas"
+        canonicalUrl="https://pablorozados.github.io/propagandas"
       />
       {/* Header agora é passado pelo App.tsx com lógica automática */}
       
