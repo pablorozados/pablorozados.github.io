@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useEpisodes } from '@/hooks/useEpisodes';
 import { useAuth } from '@/hooks/useAuth';
+import pixImage from '@/assets/pix.jpg';
 
 interface HeaderProps {
   onAdminClick?: () => void; // Tornar opcional
@@ -93,7 +94,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
               <div className="p-6 space-y-6">
                 <div className="text-center">
                   <p className="font-mono text-gray-300 mb-4">
-                    Sua contribuição ajuda a manter o podcast no ar e produzir mais conteúdo!
+                    Sua contribuição ajuda a manter o podcast no ar e produzir mais conteúdo de qualidade!
                   </p>
                 </div>
                 
