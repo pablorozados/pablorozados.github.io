@@ -329,7 +329,7 @@ const Admin = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4 max-h-96 overflow-y-auto">
+                <div className="space-y-4 min-h-[600px] max-h-[90vh] overflow-y-auto">
                   {episodes.map((episode) => (
                     <div
                       key={episode.id}
