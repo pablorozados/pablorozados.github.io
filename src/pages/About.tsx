@@ -108,6 +108,17 @@ const About = () => {
               </a>
             ))}
           </div>
+          
+          <div className="mt-6 text-center">
+            <a 
+              href="https://pod.link/1513923155" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-lg text-blue-600 hover:text-blue-800 transition-colors font-medium hover:underline"
+            >
+              Acesse o Podlink e descubra todas as plataformas onde estamos presentes
+            </a>
+          </div>
         </div>
 
         <div className="content-section bg-white/95 backdrop-blur-sm rounded-2xl p-10 mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
@@ -116,15 +127,20 @@ const About = () => {
             <div className="absolute bottom-0 left-0 w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded"></div>
           </h2>
           
-          <div className="host-name text-2xl font-semibold text-gray-700 mb-2">Pablo Prime</div>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            <span className="bg-gradient-to-r from-yellow-200 to-orange-200 px-2 py-1 rounded font-semibold text-gray-800">
-              Jornalista de formação
-            </span>, repórter, apresentador, editor, redator, podcaster e produtor. 
-            Com mais de <strong>15 anos dedicados ao jornalismo de games</strong>, Pablo mudou de área de atuação, 
-            mas não de paixão. Todo esse tempo mexendo com games deu uma visão bem particular sobre as histórias 
-            que moldaram essa indústria bilionária.
-          </p>
+          <div className="flex items-start gap-8 mb-6">
+            <img src={pabloAvatar} alt="Pablo Prime" className="w-32 h-32 rounded-full border-4 border-gradient-to-r from-blue-500 to-purple-600 shadow-xl" />
+            <div>
+              <div className="host-name text-2xl font-semibold text-gray-700 mb-2">Pablo Prime</div>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                <span className="bg-gradient-to-r from-yellow-200 to-orange-200 px-2 py-1 rounded font-semibold text-gray-800">
+                  Jornalista de formação
+                </span>, repórter, apresentador, editor, redator, podcaster e produtor. 
+                Com mais de <strong>15 anos dedicados ao jornalismo de games</strong>, Pablo mudou de área de atuação, 
+                mas não de paixão. Todo esse tempo mexendo com games deu uma visão bem particular sobre as histórias 
+                que moldaram essa indústria bilionária.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="content-section bg-white/95 backdrop-blur-sm rounded-2xl p-10 mb-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
