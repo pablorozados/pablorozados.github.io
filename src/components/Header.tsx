@@ -101,7 +101,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                 <div className="text-center space-y-4">
                   <div className="bg-white p-2 rounded-lg inline-block">
                     <img 
-                      src="/src/assets/pix.jpg" 
+                      src={pixImage} 
                       alt="QR Code PIX" 
                       className="w-48 h-48 mx-auto object-contain"
                     />
@@ -195,7 +195,7 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                       <div className="text-center space-y-4">
                         <div className="bg-white p-2 rounded-lg inline-block">
                           <img 
-                            src="/src/assets/pix.jpg" 
+                            src={pixImage} 
                             alt="QR Code PIX" 
                             className="w-48 h-48 mx-auto object-contain"
                           />
