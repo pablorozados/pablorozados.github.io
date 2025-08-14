@@ -77,13 +77,8 @@ const Index = () => {
 
   const handleYearClick = (yearGroup: YearGroup) => {
     trackYearClick(yearGroup.year, yearGroup.events.length);
-    if (yearGroup.events.length === 1) {
-      // Se só tem um evento, abre diretamente o episódio
-      setSelectedEpisode(yearGroup.events[0].episode);
-    } else {
-      // Se tem múltiplos eventos, abre o seletor
-      setSelectedYear(yearGroup);
-    }
+    // Sempre abre o seletor de eventos, independente da quantidade
+    setSelectedYear(yearGroup);
   };
 
   const closeDialog = () => {
