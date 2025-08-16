@@ -108,25 +108,20 @@ const Header = ({ onAdminClick }: HeaderProps) => {
                   </div>
                   
                   <div className="space-y-3">
-                    <p className="font-mono text-sm text-retro-yellow">
-                      Código Copia e Cola:
-                    </p>
-                    <div className="bg-gray-900 p-3 rounded border border-retro-blue">
-                      <p className="font-mono text-xs text-gray-300 break-all">
-                        00020101021126580014br.gov.bcb.pix0136bdde579d-62ba-49aa-9e5f-914c4f739d0c5204000053039865802BR5919PABLO FROTA ROZADOS6012PORTO ALEGRE62070503***63046CE2
-                      </p>
-                    </div>
                     <Button
                       onClick={() => {
                         navigator.clipboard.writeText('00020101021126580014br.gov.bcb.pix0136bdde579d-62ba-49aa-9e5f-914c4f739d0c5204000053039865802BR5919PABLO FROTA ROZADOS6012PORTO ALEGRE62070503***63046CE2');
-                        toast({ title: "Código copiado!", description: "O código PIX foi copiado para sua área de transferência.", });
+                        toast({ 
+                          title: "Código PIX copiado!", 
+                          description: "O código foi copiado para sua área de transferência. Cole no seu app do banco para fazer a transferência.", 
+                        });
                       }}
-                      className="retro-button font-mono text-sm"
+                      className="retro-button font-mono text-sm w-full"
                     >
-                      📋 Copiar Código PIX
+                      📋 Copiar Código PIX Copia e Cola
                     </Button>
                     <p className="font-mono text-xs text-gray-400">
-                      Escaneie o QR Code ou copie o código acima
+                      Escaneie o QR Code ou use o botão acima para copiar o código
                     </p>
                   </div>
                 </div>
